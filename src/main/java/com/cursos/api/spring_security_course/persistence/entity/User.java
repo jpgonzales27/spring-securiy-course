@@ -3,10 +3,12 @@ package com.cursos.api.spring_security_course.persistence.entity;
 import com.cursos.api.spring_security_course.persistence.util.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "\"user\"")
@@ -26,7 +28,28 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+
+        if(role == null) return null;
+
+        if(role.getPermissions() == null) return null;
+
+
+//        return role.getPermissions().stream()
+//                .map(each -> {
+//                    String permission = each.name();
+//                    return new SimpleGrantedAuthority(permission);
+//                })
+//                .collect(Collectors.toList());
+
+//        return role.getPermissions().stream()
+//                .map(each -> each.name())
+//                .map(each -> new SimpleGrantedAuthority(each))
+//                .collect(Collectors.toList());
+
+        return role.getPermissions().stream()
+                .map(Enum::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
     @Override
     public String getPassword() {
