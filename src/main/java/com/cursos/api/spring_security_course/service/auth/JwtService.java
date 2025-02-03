@@ -1,5 +1,6 @@
 package com.cursos.api.spring_security_course.service.auth;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -45,4 +46,15 @@ public class JwtService {
         System.out.println( new String(passwordDecoded) );
         return Keys.hmacShaKeyFor(passwordDecoded);
     }
+
+    public String extractUsername(String jwt) {
+        return extractAllClaims(jwt).getSubject();
+    }
+
+    private Claims extractAllClaims(String jwt) {
+//        return Jwts.parserBuilder().setSigningKey( generateKey() ).build()
+        return Jwts.parser().setSigningKey( generateKey() ).build()
+                .parseClaimsJws(jwt).getBody();
+    }
+
 }
