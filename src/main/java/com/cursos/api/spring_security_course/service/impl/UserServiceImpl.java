@@ -36,6 +36,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public Optional<User> findOneByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
     private void validatePassword(SaveUser dto) {
 
